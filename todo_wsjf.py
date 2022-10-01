@@ -18,6 +18,8 @@ Wynik:
 '''
 
 import os
+import time
+from tabulate import tabulate
 
 cmd = "clear"
 file_location = "."
@@ -33,17 +35,30 @@ def createTask():
             #
     '''
     '''
-    TODO: add task (summary, description, Cosy of delay, Job size, User-business Value, Time criticality, Risk reduction and/or Opportunity enablement)
+    DONE: add task (summary, description, Cosy of delay, Job size, User-business Value, Time criticality, Risk reduction and/or Opportunity enablement)
     result: input data saved as list
     '''
+    global summary
     summary = input("summary: ")
-    value = input("value: ")
-    size = input("size: ")
-    timeCriticality = input("time criticality: ")
-    riskReduction = input("risk reduction: ")
+    global value
+    value = int(input("value: "))
+    global size
+    size = int(input("size: "))
+    global timeCriticality
+    timeCriticality = int(input("time criticality: "))
+    global riskReduction
+    riskReduction = int(input("risk reduction: "))
+    print()
+    print("...task created")
+
 
     task = list()
-    task.extend([summary, value, size, timeCriticality, riskReduction])
+
+    calculateCostOfDelay(value, size, timeCriticality, riskReduction)
+
+    calulateWSJF(cost_of_delay, size)
+
+    task.extend([summary, value, size, timeCriticality, riskReduction, cost_of_delay, wsjf])
     tasks.append(task)
 
 def editTask(task):
@@ -56,25 +71,25 @@ def editTask(task):
     '''
     pass
 
-def calculateCostOfDelay(task, value, duration, risk):
+def calculateCostOfDelay(value, size, duration, risk):
     '''
-    TODO: Cost of delay = User-business Value + Time criticality + Risk reduction and/or Opportunity enablement
+    DONE: Cost of delay = User-business Value + Time criticality + Risk reduction and/or Opportunity enablement
     reult: [Task, CostOfDelay] list
     '''
-    pass
+    global cost_of_delay
+    cost_of_delay = int(value) + int(size) + int(timeCriticality) + int(riskReduction)
 
-def calulateWSJF(task, CostOfDelay, size):
+    return(cost_of_delay)
+
+def calulateWSJF(cost_of_delay, size):
     '''
-    TODO: WSJF = Cost of delay / Job Duration (Job size)
+    DONE: WSJF = Cost of delay / Job Duration (Job size)
     resuly: list task and wsjf
     '''
-    pass
+    global wsjf
+    wsjf = cost_of_delay / size
 
-def prioritizeTasks(tasksList):
-    '''
-    TODO:
-    '''
-    pass
+    return(wsjf)
 
 def changeStatus(task):
     '''
@@ -83,8 +98,7 @@ def changeStatus(task):
     '''
 def saveToFile(file_location):
     '''
-    TODO: save list "tasks" into file so that I can close the app and get back in future
-
+    DONE: save list "tasks" into file so that I can close the app and get back in future
     '''
     f = open("todo_wsfj", "a")
     for task in tasks:
@@ -92,12 +106,16 @@ def saveToFile(file_location):
 
     f.close()
 
+def sortTasks(list):
+    tasks.sort(key=lambda x:x[6])
+
+
 menu_options = {
     1: 'show tasks',
     2: 'add task',
-    3: '(-) edit task',
-    4: '(!) delete task',
-    5: 'exit'
+    3: 'edit task (in progress)',
+    4: 'delete task (not started)',
+    5: 'save and exit'
 }
 
 def print_menu():
@@ -112,13 +130,25 @@ def option1():
     print()
 
     # TODO: change to read task from file
+    sortTasks(tasks)
+    tasks.reverse()
+
+    '''
     if len(tasks) > 0:
         for i in range(len(tasks)):
+            #print(str(i)+" - "+str(tasks[i][0]+" - "+str(tasks[i][6])))
             print(str(i)+" - "+str(tasks[i]))
             #for task in tasks:
             #    print(str(i)+" - "+ str(task))
+
     else:
         print("There are no tasks")
+    '''
+
+    ## Tables, take 1
+    print (tabulate(tasks, headers=["Task", "Value", "Size", "Crit.", "Risk Red.", "CoD", "WSJF"]))
+
+
 
     '''
     TODO: print in table: https://www.educba.com/python-print-table/
@@ -161,9 +191,11 @@ def option4():
 
 if __name__=='__main__':
 
+    os.system(cmd)
+
     while(True):
         #os.system(cmd)
-        print()
+
         print("Menu:")
         print_menu()
         option = ''
@@ -174,17 +206,25 @@ if __name__=='__main__':
         #Check what choice was entered and act accordingly
         if option == 1:
            option1()
+           print()
         elif option == 2:
             option2()
+            print()
         elif option == 3:
             option3()
+            print()
         elif option == 4:
             option4()
+            print()
         elif option == 5:
-            print('saving...')
+            print('...saving...')
             saveToFile(file_location)
-            print("work saved")
-            print("closing")
+            time.sleep(0.5)
+            print("...work saved...")
+            time.sleep(0.5)
+            print("...closing")
+            time.sleep(0.5)
+            os.system(cmd)
             exit()
         else:
             os.system(cmd)
