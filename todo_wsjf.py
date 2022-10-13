@@ -80,12 +80,12 @@ def checkCorrcectValue(variable):
             option4()
             print()
         elif option == 5:
-            '''
-            print('...saving...')
-            saveToFile(file_location)
-            time.sleep(0.5)
-            print("...work saved...")
-            '''
+
+            #print('...saving...')
+            #saveToFile(file_location)
+            #time.sleep(0.5)
+            #print("...work saved...")
+
             time.sleep(0.5)
             print("...closing")
             time.sleep(0.5)
