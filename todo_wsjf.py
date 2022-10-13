@@ -20,24 +20,97 @@ Wynik:
 import os
 import time
 from tabulate import tabulate
+import re
+from sys import platform
 
-cmd = "clear"
+#cmd = "clear"
 file_location = "."
 tasks = list()
 
+def operatingSystemCheck():
+    global cmd
+    if platform == "win32":
+        cmd = "cls"
+        print("Running Windows")
+    elif "linux" or platform == "linux2":
+        cmd = "clear"
+
+    return(cmd)
+
+
+def saveTaskToFile():
+    f = open("todo_wsfj", "a")
+    #f.write(str(task))
+    f.write(str(task)+"\n")
+    f.close()
+
+
+def readFromFile():
+
+    global tasks
+
+    tasks = [line.split(',') for line in open("todo_wsfj")]
+
+    return(tasks)
+
+'''
+def checkCorrcectValue(variable):
+    fibonnaci_values = [1, 2, 3, 5, 8, 13, 20]
+    while(True):
+        #os.system(cmd)
+
+        print("Menu:")
+        print_menu()
+        fib_value = ''
+        try:
+            option = int(input('Enter your choice: '))
+        except:
+            print('Wrong input. Please enter a number ...')
+        #Check what choice was entered and act accordingly
+        if option == 1:
+           option1()
+           print()
+        elif option == 2:
+            option2()
+            print()
+        elif option == 3:
+            option3()
+            print()
+        elif option == 4:
+            option4()
+            print()
+        elif option == 5:
+            '''
+            print('...saving...')
+            saveToFile(file_location)
+            time.sleep(0.5)
+            print("...work saved...")
+            '''
+            time.sleep(0.5)
+            print("...closing")
+            time.sleep(0.5)
+            os.system(cmd)
+            exit()
+        else:
+            os.system(cmd)
+            print('Invalid option. Please enter a number between 1 and 5.')
+
+
+    if value not in fibonnaci_values:
+        print("please provide proper value: 1, 2, 3, 5, 8, 13, 20")
+'''
 def createTask():
 
     '''
-    def checkCorrcectValue(value):
-        fibonnaci_values = [1, 2, 3, 5, 8, 13, 20]
-        if value not in fibonnaci_values:
-            print("please provide proper value: 1, 2, 3, 5, 8, 13, 20")
+
             #
     '''
     '''
     DONE: add task (summary, description, Cosy of delay, Job size, User-business Value, Time criticality, Risk reduction and/or Opportunity enablement)
     result: input data saved as list
     '''
+    fibonnaci_values = [1, 2, 3, 5, 8, 13, 20]
+
     global summary
     summary = input("summary: ")
     global value
@@ -49,9 +122,9 @@ def createTask():
     global riskReduction
     riskReduction = int(input("risk reduction: "))
     print()
-    print("...task created")
 
 
+    global task
     task = list()
 
     calculateCostOfDelay(value, size, timeCriticality, riskReduction)
@@ -59,7 +132,27 @@ def createTask():
     calulateWSJF(cost_of_delay, size)
 
     task.extend([summary, value, size, timeCriticality, riskReduction, cost_of_delay, wsjf])
-    tasks.append(task)
+
+    #convert list to string
+    task = str(task)
+
+    #test: task as string
+    #print(task)
+
+    # remove [, ], ',
+    task = re.sub('[\[\]\']', '', task)
+
+    #test: if [, ], ' removed
+    #print(task)
+
+    print("...task created")
+    time.sleep(0.2)
+
+    # save task to file
+    saveTaskToFile()
+    print("...task saved")
+
+    #tasks.append(task) zmiana: zapisujemy pojedyncze taski do pliku
 
 def editTask(task):
     '''
@@ -107,6 +200,10 @@ def saveToFile(file_location):
     f.close()
 
 def sortTasks(list):
+    for task in tasks:
+        task[6] = float(task[6])
+        task[6] = round(task[6], 3)
+
     tasks.sort(key=lambda x:x[6])
 
 
@@ -115,7 +212,7 @@ menu_options = {
     2: 'add task',
     3: 'edit task (in progress)',
     4: 'delete task (not started)',
-    5: 'save and exit'
+    5: 'exit'
 }
 
 def print_menu():
@@ -129,21 +226,11 @@ def option1():
     print("Display tasks:")
     print()
 
-    # TODO: change to read task from file
+    readFromFile()
+
     sortTasks(tasks)
+
     tasks.reverse()
-
-    '''
-    if len(tasks) > 0:
-        for i in range(len(tasks)):
-            #print(str(i)+" - "+str(tasks[i][0]+" - "+str(tasks[i][6])))
-            print(str(i)+" - "+str(tasks[i]))
-            #for task in tasks:
-            #    print(str(i)+" - "+ str(task))
-
-    else:
-        print("There are no tasks")
-    '''
 
     ## Tables, take 1
     print (tabulate(tasks, headers=["Task", "Value", "Size", "Crit.", "Risk Red.", "CoD", "WSJF"]))
@@ -190,7 +277,7 @@ def option4():
     print("Handle option Option 4")
 
 if __name__=='__main__':
-
+    operatingSystemCheck()
     os.system(cmd)
 
     while(True):
@@ -217,10 +304,12 @@ if __name__=='__main__':
             option4()
             print()
         elif option == 5:
+            '''
             print('...saving...')
             saveToFile(file_location)
             time.sleep(0.5)
             print("...work saved...")
+            '''
             time.sleep(0.5)
             print("...closing")
             time.sleep(0.5)
