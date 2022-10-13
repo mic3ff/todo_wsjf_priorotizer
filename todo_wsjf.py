@@ -53,58 +53,26 @@ def readFromFile():
 
     return(tasks)
 
-'''
-def checkCorrcectValue(variable):
-    fibonnaci_values = [1, 2, 3, 5, 8, 13, 20]
-    while(True):
-        #os.system(cmd)
 
-        print("Menu:")
-        print_menu()
-        fib_value = ''
+def checkCorrcectValue(variable):
+    global anwser
+    anwser = ''
+    while(True):
+
         try:
-            option = int(input('Enter your choice: '))
+            anwser = int(input(str(variable+": ")))
         except:
             print('Wrong input. Please enter a number ...')
         #Check what choice was entered and act accordingly
-        if option == 1:
-           option1()
-           print()
-        elif option == 2:
-            option2()
-            print()
-        elif option == 3:
-            option3()
-            print()
-        elif option == 4:
-            option4()
-            print()
-        elif option == 5:
-
-            #print('...saving...')
-            #saveToFile(file_location)
-            #time.sleep(0.5)
-            #print("...work saved...")
-
-            time.sleep(0.5)
-            print("...closing")
-            time.sleep(0.5)
-            os.system(cmd)
-            exit()
+        if anwser not in  [1, 2, 3, 5, 8, 13, 20]:
+            print("provide number 1, 2, 3, 5, 8, 13 or 20")
         else:
-            os.system(cmd)
-            print('Invalid option. Please enter a number between 1 and 5.')
+            variable = anwser
+            break
 
+    return(variable)
 
-    if value not in fibonnaci_values:
-        print("please provide proper value: 1, 2, 3, 5, 8, 13, 20")
-'''
 def createTask():
-
-    '''
-
-            #
-    '''
     '''
     DONE: add task (summary, description, Cosy of delay, Job size, User-business Value, Time criticality, Risk reduction and/or Opportunity enablement)
     result: input data saved as list
@@ -112,6 +80,7 @@ def createTask():
     fibonnaci_values = [1, 2, 3, 5, 8, 13, 20]
 
     global summary
+    #checkCorrcectValue(summary) #IN PROGRESS
     summary = input("summary: ")
     global value
     value = int(input("value: "))
